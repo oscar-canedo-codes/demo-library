@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+    <script src="javascript.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <!-- Main Container -->
+    <main class="main">
+        <!-- Grid Articles Container -->
+        <section class="library" id="library">
+
+            <!-- Hard-coded preview card -->
+            <article class="book" id="book">
+                <div class="book__header">
+                    <figure class="book__figure">
+                        <img src="https://via.placeholder.com/220x320?text=Book+Cover" alt="Book Cover" class="book__image">
+                    </figure>
+                </div>
+
+                <div class="book__body">
+                    <h2 class="book__title">The Brothers Karamazov</h2>
+                    <p class="book__author">by Fyodor Dostoevsky</p>
+                    <p class="book__copy">
+                        The Brothers Karamazov is a passionate philosophical novel that explores faith,
+                        doubt, free will, and the complexities of family loyalty through the lives of
+                        the Karamazov brothers.
+                    </p>
+                    <p class="book__pages">Pages: 824</p>
+                    <p class="book__read">Status: Read</p>
+                </div>
+
+                <footer class="book__footer">
+                    <div class="book__actions">
+                        <button class="book__toggle-read" aria-label="Toggle read status">Toggle Read</button>
+                        <button class="book__remove-button" aria-label="Remove book">Remove</button>
+                    </div>
+                </footer>
+            </article>
+
+        </section>
+    </main>
+
+</body>
+</html>
