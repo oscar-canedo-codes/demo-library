@@ -1,0 +1,183 @@
+/* Editor Base Template */
+
+:root {
+  --yellow: #ffc600;
+  --black: #272727;
+  --blue: #203b60;
+  --white: #ffffff;
+  --orange: #ff8f1f;
+  --fuschia: #ec1b92;
+}
+
+html {
+  /* border-box box model allows us to add padding and border to our elements without increasing their size */
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: 900;
+  color: var(--black);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.07);
+}
+
+/*We inherit box-sizing: border-box; from our <html> selector
+      Apparently this is a bit better than applying box-sizing: border-box; directly to the * selector
+    */
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-image: url("./assests/"),
+    linear-gradient(110deg, #f93d66, #6d47d9);
+  background-size: 340px, auto;
+  min-height: calc(100vh - 100px);
+  margin: 20px;
+  background-attachment: fixed;
+  letter-spacing: -1px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 5px 0;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 0;
+}
+
+.library {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.book {
+  background: var(--white);
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.16);
+}
+
+.book__header {
+  background: linear-gradient(135deg, rgba(34, 191, 255, 0.14), rgba(79, 93, 255, 0.1));
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.book__figure {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.book__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.book__body {
+  padding: 24px;
+  display: grid;
+  gap: 14px;
+  flex: 1;
+}
+
+.book__title {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: #12213a;
+}
+
+.book__author {
+  font-size: 0.95rem;
+  color: #5d6c86;
+}
+
+
+.book__pages,
+.book__read {
+  font-weight: 700;
+  color: #203b60;
+}
+
+.book__footer {
+  padding: 16px 24px 24px;
+}
+
+.book__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.book__toggle-read,
+.book__remove-button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.book__toggle-read {
+  background: #203b60;
+  color: #ffffff;
+}
+
+.book__remove-button {
+  background: #ff8f1f;
+  color: #ffffff;
+}
+
+.book__toggle-read:hover,
+.book__remove-button:hover {
+  transform: translateY(-1px);
+}
+
+.book__toggle-read:hover {
+  background: #132847;
+}
+
+.book__remove-button:hover {
+  background: #d86a06;
+}
+
+@media (max-width: 520px) {
+  body {
+    margin: 12px;
+  }
+
+  .library {
+    padding: 0 12px;
+    gap: 18px;
+  }
+
+  .book {
+    border-radius: 22px;
+  }
+}
