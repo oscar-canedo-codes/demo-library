@@ -10,7 +10,6 @@
 }
 
 html {
-  /* border-box box model allows us to add padding and border to our elements without increasing their size */
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -19,9 +18,6 @@ html {
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.07);
 }
 
-/*We inherit box-sizing: border-box; from our <html> selector
-      Apparently this is a bit better than applying box-sizing: border-box; directly to the * selector
-    */
 *,
 *:before,
 *:after {
@@ -117,6 +113,12 @@ h6 {
   color: #5d6c86;
 }
 
+.book__copy {
+  /* Added to match your HTML class */
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #5d6c86;
+}
 
 .book__pages,
 .book__read {
@@ -134,8 +136,7 @@ h6 {
   flex-wrap: wrap;
 }
 
-.book__toggle-read,
-.book__remove-button {
+.book__btn {
   border: none;
   border-radius: 999px;
   padding: 10px 18px;
@@ -144,26 +145,27 @@ h6 {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.book__toggle-read {
+.book__btn:hover {
+  transform: translateY(-1px);
+}
+
+/* BEM FIX: Modifiers for unique variations 
+*/
+.book__btn--read {
   background: #203b60;
   color: #ffffff;
 }
 
-.book__remove-button {
+.book__btn--read:hover {
+  background: #132847;
+}
+
+.book__btn--remove {
   background: #ff8f1f;
   color: #ffffff;
 }
 
-.book__toggle-read:hover,
-.book__remove-button:hover {
-  transform: translateY(-1px);
-}
-
-.book__toggle-read:hover {
-  background: #132847;
-}
-
-.book__remove-button:hover {
+.book__btn--remove:hover {
   background: #d86a06;
 }
 
