@@ -63,7 +63,8 @@ const addBook = (book) => {
  */
 const displayBook = () => {
     // [x] BUG: This will duplicate cards on screen unless the parent container is cleared first
-    myLibrary.textContent = ""; // Clear existing content to prevent duplication
+    // Clear existing content on the container element to prevent duplication
+    library.innerHTML = "";
 
     myLibrary.forEach((book, index) => {
         const bookCard = document.createElement("div");
@@ -124,9 +125,21 @@ if (addBookButton && addBookModal && closeButton) {
     });
 } 
 
-// Global/Hardcoded Toggle Listener
-isRead.addEventListener("click", () => {
-    book.toggleRead();
-    library.textContent = ""; 
-    displayBook();
+// Event delegation for card interactions (toggle read / remove)
+library.addEventListener("click", (event) => {
+    const bookEl = event.target.closest(".book");
+    if (!bookEl) return;
+
+    const index = Number(bookEl.dataset.index);
+
+    if (event.target.classList.contains("book__toggle-read")) {
+        myLibrary[index].toggleRead();
+        const readStatusElement = bookEl.querySelector(".book__read");
+        readStatusElement.textContent = myLibrary[index].isRead ? "Read" : "Not read yet";
+    }
+
+    if (event.target.classList.contains("book__remove")) {
+        myLibrary.splice(index, 1);
+        displayBook();
+    }
 });

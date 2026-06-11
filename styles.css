@@ -114,7 +114,6 @@ h6 {
 }
 
 .book__copy {
-  /* Added to match your HTML class */
   font-size: 0.95rem;
   line-height: 1.5;
   color: #5d6c86;
@@ -149,8 +148,6 @@ h6 {
   transform: translateY(-1px);
 }
 
-/* BEM FIX: Modifiers for unique variations 
-*/
 .book__btn--read {
   background: #203b60;
   color: #ffffff;
