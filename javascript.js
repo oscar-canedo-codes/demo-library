@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. GLOBAL STATE & DOM ELEMENT SELECTIONS
+    GLOBAL STATE & DOM ELEMENT SELECTIONS
    ========================================================================== */
 const myLibrary = [];
 
@@ -12,19 +12,16 @@ const closeButton = document.getElementById("modalClose");
 const errorMsg = document.getElementById("errorMsg");
 const isRead = document.getElementById("isRead");
 
-// Unique ID generation stub
-let bookId = crypto.randomUUID();
-
-
+let bookId = crypto.randomUUID(); // Global counter for unique book IDs (if not using crypto.randomUUID)
 /* ==========================================================================
-   2. DATA MODELS (CONSTRUCTORS & PROTOTYPES)
+    DATA MODELS (CONSTRUCTORS & PROTOTYPES)
    ========================================================================== */
 /**
  * Constructor for creating a new Book instance.
  * @function Book
  */
 function Book(title, author, pages, isRead, bookId) {
-    this.bookId = bookId;
+    this.bookId = bookId || crypto.randomUUID();
     this.title = title;
     this.author = author;
     this.pages = pages;
@@ -35,13 +32,13 @@ Book.prototype.toggleRead = function() {
     this.isRead = !this.isRead;
 };
 
-// Instance testing
+// Instance testing: create and add a hardcoded example so events can be tested
 const exampleBook = new Book("The Great Gatsby", "F. Scott Fitzgerald", 180, true, bookId);
 console.log(exampleBook);
 
 
 /* ==========================================================================
-   3. CORE BUSINESS LOGIC (DATA MANIPULATION)
+    CORE BUSINESS LOGIC (DATA MANIPULATION)
    ========================================================================== */
 /**
  * Adds a new book object instance directly into the array database.
@@ -49,13 +46,19 @@ console.log(exampleBook);
  * @param {Object} book - The book properties submitted from the form layout.
  */
 const addBook = (book) => {
+    // Accept either a plain object or an existing Book instance
+    if (book instanceof Book) {
+        myLibrary.push(book);
+        return;
+    }
+
     const newBook = new Book(book.title, book.author, book.pages, book.isRead);
     myLibrary.push(newBook);
 };
 
 
 /* ==========================================================================
-   4. UI RENDER FUNCTIONS (DOM MANIPULATION)
+    UI RENDER FUNCTIONS (DOM MANIPULATION)
    ========================================================================== */
 /**
  * Renders the full collection of books from myLibrary array as DOM element cards.
@@ -69,7 +72,8 @@ const displayBook = () => {
     myLibrary.forEach((book, index) => {
         const bookCard = document.createElement("div");
         bookCard.classList.add("book");
-        bookCard.dataset.index = index;
+        // Track unique book id for event delegation and object lookup
+        bookCard.dataset.bookId = book.bookId;
 
         bookCard.innerHTML = `
         <h3 class="book__title">${book.title}</h3>
@@ -93,7 +97,7 @@ const hideModal = () => {
 
 
 /* ==========================================================================
-   5. EVENT LISTENERS & INITIALIZATION
+    EVENT LISTENERS & INITIALIZATION
    ========================================================================== */
 
 // Form Submission Execution
@@ -117,29 +121,46 @@ if (addBookButton && addBookModal && closeButton) {
 
         const newBook = new Book(title, author, pages, isRead);
         
-        // ! BUG: Array duplication happening here. 
         addBook(newBook);
 
         hideModal();
         addBookForm.reset();
+        displayBook(); // Re-render list to show the new card
     });
-} 
+}
 
 // Event delegation for card interactions (toggle read / remove)
-library.addEventListener("click", (event) => {
-    const bookEl = event.target.closest(".book");
-    if (!bookEl) return;
+if (library) {
+    library.addEventListener("click", (event) => {
+        const bookEl = event.target.closest(".book");
+        if (!bookEl) return;
 
-    const index = Number(bookEl.dataset.index);
+        const bookId = bookEl.dataset.bookId;
+        const libraryBook = bookId ? myLibrary.find((book) => book.bookId === bookId) : undefined;
 
-    if (event.target.classList.contains("book__toggle-read")) {
-        myLibrary[index].toggleRead();
-        const readStatusElement = bookEl.querySelector(".book__read");
-        readStatusElement.textContent = myLibrary[index].isRead ? "Read" : "Not read yet";
-    }
+        const isToggleButton = event.target.classList.contains("book__toggle-read") || event.target.classList.contains("book__btn--read");
+        const isRemoveButton = event.target.classList.contains("book__remove") || event.target.classList.contains("book__btn--remove");
 
-    if (event.target.classList.contains("book__remove")) {
-        myLibrary.splice(index, 1);
-        displayBook();
-    }
-});
+        if (isToggleButton) {
+            const readStatusElement = bookEl.querySelector(".book__read");
+            if (libraryBook) {
+                libraryBook.toggleRead();
+                if (readStatusElement) {
+                    readStatusElement.textContent = libraryBook.isRead ? "Read" : "Not read yet";
+                }
+            } else if (readStatusElement) {
+                const currentlyRead = readStatusElement.textContent.toLowerCase().includes("read");
+                readStatusElement.textContent = currentlyRead ? "Status: Not read yet" : "Status: Read";
+            }
+        }
+
+        if (isRemoveButton) {
+            if (libraryBook) {
+                myLibrary.splice(index, 1);
+                displayBook();
+            } else {
+                bookEl.remove();
+            }
+        }
+    });
+}
