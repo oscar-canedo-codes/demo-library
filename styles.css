@@ -16,7 +16,7 @@ html {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-weight: 900;
+  font-weight: 500;
   color: var(--black);
 }
 
@@ -57,7 +57,12 @@ h6 {
 .library__header {
   width: min(1200px, 100%);
   margin: 0 auto 32px;
-  padding: 0 20px;
+  padding: 24px 24px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(14px);
 }
 
 .library__heading {
@@ -69,9 +74,12 @@ h6 {
 }
 
 .library__title {
-  font-size: clamp(2rem, 3.5vw, 3rem);
-  line-height: 1.05;
-  color: var(--white);
+  font-size: clamp(2.25rem, 3.8vw, 3.4rem);
+  line-height: 1.02;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 18px 40px rgba(255, 255, 255, 0.14);
 }
 
 .library__intro,
@@ -100,32 +108,45 @@ h6 {
 
 .library {
   display: grid;
-  gap: 28px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   width: min(1200px, 100%);
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 .book {
-  background: var(--white);
-  border-radius: 28px;
-  box-shadow: 0 24px 60px var(--shadow);
+  background: #f4f6fb;
+  border: 1px solid rgba(32, 59, 96, 0.12);
+  border-radius: 32px;
+  box-shadow: 0 28px 90px rgba(17, 24, 39, 0.12);
   overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr auto;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.book::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.24), transparent 26%), radial-gradient(circle at bottom right, rgba(255,255,255,0.14), transparent 18%);
+}
+
+.book__header {
+  padding: 28px 24px 12px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
 }
 
 .book:hover {
   transform: translateY(-6px);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.16);
-}
-
-.book__header {
-  padding: 22px;
-  display: flex;
-  justify-content: center;
 }
 
 .book__figure {
@@ -205,7 +226,6 @@ h6 {
   background: #132847;
 }
 
-/* TODO: This overlay fix is required to ensure the modal hidden state is respected above the modal base display rules. */
 .modal {
   position: fixed;
   inset: 0;
@@ -241,7 +261,6 @@ h6 {
   color: var(--muted);
 }
 
-/* TODO: Strict BEM form structure; keep label/input styling scoped to the book-form block. */
 .book-form {
   display: grid;
   gap: 18px;
@@ -280,6 +299,12 @@ h6 {
   justify-content: flex-end;
 }
 
+@media (max-width: 980px) {
+  .library {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
 @media (max-width: 680px) {
   .library__heading {
     flex-direction: column;
@@ -289,6 +314,10 @@ h6 {
   .library__add-button {
     width: 100%;
     text-align: center;
+  }
+
+  .library {
+    grid-template-columns: 1fr;
   }
 }
 
