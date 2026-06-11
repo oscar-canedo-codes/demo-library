@@ -7,6 +7,9 @@
   --white: #ffffff;
   --orange: #ff8f1f;
   --fuschia: #ec1b92;
+  --surface: #f7f9ff;
+  --muted: #5d6c86;
+  --shadow: rgba(32, 59, 96, 0.12);
 }
 
 html {
@@ -15,7 +18,6 @@ html {
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 900;
   color: var(--black);
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.07);
 }
 
 *,
@@ -25,13 +27,16 @@ html {
 }
 
 body {
-  background-image: url("./assests/"),
-    linear-gradient(110deg, #f93d66, #6d47d9);
-  background-size: 340px, auto;
-  min-height: calc(100vh - 100px);
-  margin: 20px;
-  background-attachment: fixed;
-  letter-spacing: -1px;
+  background: linear-gradient(110deg, #f93d66, #6d47d9);
+  min-height: 100vh;
+  margin: 0;
+  padding: 24px;
+  letter-spacing: -0.5px;
+}
+
+/* // [x] FIX: Confirm modal hidden state specificity and preserve modal page overlay behavior. */
+.hidden {
+  display: none;
 }
 
 h1,
@@ -40,20 +45,63 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
 }
 
 .main {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 20px 0;
+  padding: 20px 0 40px;
+}
+
+.library__header {
+  width: min(1200px, 100%);
+  margin: 0 auto 32px;
+  padding: 0 20px;
+}
+
+.library__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.library__title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.05;
+  color: var(--white);
+}
+
+.library__intro,
+.library__subtext {
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 60ch;
+}
+
+.library__add-button {
+  border: none;
+  border-radius: 999px;
+  padding: 16px 24px;
+  background: var(--white);
+  color: var(--blue);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.library__add-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18);
 }
 
 .library {
   display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   width: min(1200px, 100%);
   margin: 0 auto;
   padding: 0 20px;
@@ -62,21 +110,20 @@ h6 {
 .book {
   background: var(--white);
   border-radius: 28px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 24px 60px var(--shadow);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .book:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.16);
 }
 
 .book__header {
-  background: linear-gradient(135deg, rgba(34, 191, 255, 0.14), rgba(79, 93, 255, 0.1));
-  padding: 20px;
+  padding: 22px;
   display: flex;
   justify-content: center;
 }
@@ -84,49 +131,40 @@ h6 {
 .book__figure {
   margin: 0;
   width: 100%;
-  max-width: 100%;
 }
 
 .book__image {
   width: 100%;
-  height: auto;
-  display: block;
   border-radius: 18px;
   object-fit: cover;
+  display: block;
 }
 
 .book__body {
   padding: 24px;
   display: grid;
   gap: 14px;
-  flex: 1;
 }
 
 .book__title {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   line-height: 1.2;
   color: #12213a;
 }
 
 .book__author {
   font-size: 0.95rem;
-  color: #5d6c86;
-}
-
-.book__copy {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: #5d6c86;
+  color: var(--muted);
 }
 
 .book__pages,
 .book__read {
   font-weight: 700;
-  color: #203b60;
+  color: var(--blue);
 }
 
 .book__footer {
-  padding: 16px 24px 24px;
+  padding: 18px 24px 24px;
 }
 
 .book__actions {
@@ -135,48 +173,144 @@ h6 {
   flex-wrap: wrap;
 }
 
-.book__btn {
+.book__btn,
+.book-form__button {
   border: none;
   border-radius: 999px;
-  padding: 10px 18px;
+  padding: 12px 18px;
   cursor: pointer;
   font-weight: 700;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.book__btn:hover {
+.book__btn:hover,
+.book-form__button:hover {
   transform: translateY(-1px);
 }
 
-.book__btn--read {
-  background: #203b60;
-  color: #ffffff;
+.book__btn--toggle,
+.book-form__button--secondary {
+  background: #eef2ff;
+  color: var(--blue);
 }
 
-.book__btn--read:hover {
+.book__btn--remove,
+.book-form__button--primary {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.book__btn--remove:hover,
+.book-form__button--primary:hover {
   background: #132847;
 }
 
-.book__btn--remove {
-  background: #ff8f1f;
-  color: #ffffff;
+/* TODO: This overlay fix is required to ensure the modal hidden state is respected above the modal base display rules. */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(20, 20, 45, 0.65);
+  z-index: 100;
+  padding: 24px;
 }
 
-.book__btn--remove:hover {
-  background: #d86a06;
+.modal.hidden {
+  display: none !important;
+}
+
+.modal__content {
+  width: min(500px, 100%);
+  padding: 32px;
+  border-radius: 28px;
+  background: var(--white);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.22);
+  position: relative;
+}
+
+.modal__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+/* TODO: Strict BEM form structure; keep label/input styling scoped to the book-form block. */
+.book-form {
+  display: grid;
+  gap: 18px;
+}
+
+.book-form__group {
+  display: grid;
+  gap: 8px;
+}
+
+.book-form__label {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.book-form__input {
+  border: 1px solid #d6d9e6;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.book-form__label--checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.book-form__group--actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 680px) {
+  .library__heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .library__add-button {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (max-width: 520px) {
   body {
-    margin: 12px;
+    padding: 14px;
+  }
+
+  .main {
+    padding-top: 12px;
   }
 
   .library {
-    padding: 0 12px;
     gap: 18px;
+    padding: 0 12px;
   }
 
   .book {
     border-radius: 22px;
+  }
+
+  .modal__content {
+    padding: 22px;
   }
 }

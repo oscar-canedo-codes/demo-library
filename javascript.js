@@ -4,15 +4,14 @@
 const myLibrary = [];
 
 // DOM Elements
+// [x] TODO: Keep modal and form element references centralized to support open/close logic and validation.
 const library = document.getElementById("library");
 const addBookButton = document.getElementById("addBookButton");
 const addBookModal = document.getElementById("modal");
 const addBookForm = document.getElementById("form");
 const closeButton = document.getElementById("modalClose");
-const errorMsg = document.getElementById("errorMsg");
-const isRead = document.getElementById("isRead");
+const cancelButton = document.getElementById("modalCancel");
 
-let bookId = crypto.randomUUID(); // Global counter for unique book IDs (if not using crypto.randomUUID)
 /* ==========================================================================
     DATA MODELS (CONSTRUCTORS & PROTOTYPES)
    ========================================================================== */
@@ -32,10 +31,16 @@ Book.prototype.toggleRead = function() {
     this.isRead = !this.isRead;
 };
 
-// Instance testing: create and add a hardcoded example so events can be tested
-const exampleBook = new Book("The Great Gatsby", "F. Scott Fitzgerald", 180, true, bookId);
-console.log(exampleBook);
+const initialBooks = [
+    new Book("The Great Gatsby", "F. Scott Fitzgerald", 180, true),
+    new Book("Invisible Cities", "Italo Calvino", 165, false),
+    new Book("The Night Circus", "Erin Morgenstern", 505, true)
+];
 
+const getCoverUrl = (title) => {
+    const label = encodeURIComponent(title);
+    return `https://via.placeholder.com/360x520?text=${label}`;
+};
 
 /* ==========================================================================
     CORE BUSINESS LOGIC (DATA MANIPULATION)
@@ -46,7 +51,6 @@ console.log(exampleBook);
  * @param {Object} book - The book properties submitted from the form layout.
  */
 const addBook = (book) => {
-    // Accept either a plain object or an existing Book instance
     if (book instanceof Book) {
         myLibrary.push(book);
         return;
@@ -56,7 +60,6 @@ const addBook = (book) => {
     myLibrary.push(newBook);
 };
 
-
 /* ==========================================================================
     UI RENDER FUNCTIONS (DOM MANIPULATION)
    ========================================================================== */
@@ -65,28 +68,38 @@ const addBook = (book) => {
  * @function displayBook
  */
 const displayBook = () => {
-    // [x] BUG: This will duplicate cards on screen unless the parent container is cleared first
-    // Clear existing content on the container element to prevent duplication
     library.innerHTML = "";
 
-    myLibrary.forEach((book, index) => {
-        const bookCard = document.createElement("div");
+    myLibrary.forEach((book) => {
+        const bookCard = document.createElement("article");
         bookCard.classList.add("book");
-        // Track unique book id for event delegation and object lookup
         bookCard.dataset.bookId = book.bookId;
 
         bookCard.innerHTML = `
-        <h3 class="book__title">${book.title}</h3>
-        <p class="book__author">by ${book.author}</p>
-        <p class="book__pages">${book.pages} pages</p>
-        <p class="book__read">${book.isRead ? "Read" : "Not read yet"}</p>
-        <button class="book__toggle-read">Toggle Read</button>
-        <button class="book__remove">Remove</button>`;
+            <div class="book__header">
+                <figure class="book__figure">
+                    <img src="${getCoverUrl(book.title)}" alt="Cover for ${book.title}" class="book__image" />
+                </figure>
+            </div>
+            <div class="book__body">
+                <h3 class="book__title">${book.title}</h3>
+                <p class="book__author">by ${book.author}</p>
+                <p class="book__pages">${book.pages} pages</p>
+                <p class="book__read">${book.isRead ? "Read" : "Not read yet"}</p>
+            </div>
+            <footer class="book__footer">
+                <div class="book__actions">
+                    <button class="book__btn book__btn--toggle" type="button" data-book-action="toggle">Toggle Read</button>
+                    <button class="book__btn book__btn--remove" type="button" data-book-action="remove">Remove</button>
+                </div>
+            </footer>`;
+
         library.appendChild(bookCard);
     });
 };
 
 /* Modal Toggle Helpers */
+// [x] TODO: Refactored modal open/close logic to keep overlay handling local and avoid global click conflicts.
 const showModal = () => {
     addBookModal.classList.remove('hidden');
 };
@@ -95,17 +108,15 @@ const hideModal = () => {
     addBookModal.classList.add('hidden');
 };
 
-
 /* ==========================================================================
     EVENT LISTENERS & INITIALIZATION
    ========================================================================== */
-
-// Form Submission Execution
-if (addBookButton && addBookModal && closeButton) {
+if (addBookButton && addBookModal && addBookForm && closeButton) {
     addBookButton.addEventListener('click', showModal);
     closeButton.addEventListener('click', hideModal);
 
-    window.addEventListener('click', (event) => {
+    // [x] FIX: close modal only when clicking the backdrop itself, not on any page-level click.
+    addBookModal.addEventListener('click', (event) => {
         if (event.target === addBookModal) {
             hideModal();
         }
@@ -114,53 +125,53 @@ if (addBookButton && addBookModal && closeButton) {
     addBookForm.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        const title = document.getElementById("title").value;
-        const author = document.getElementById("author").value;
-        const pages = document.getElementById("pages").value;
+        const title = document.getElementById("title").value.trim();
+        const author = document.getElementById("author").value.trim();
+        const pages = Number(document.getElementById("pages").value);
         const isRead = document.getElementById("read").checked;
 
-        const newBook = new Book(title, author, pages, isRead);
-        
-        addBook(newBook);
+        if (!title || !author || !pages) {
+            return;
+        }
 
+        addBook(new Book(title, author, pages, isRead));
         hideModal();
         addBookForm.reset();
-        displayBook(); // Re-render list to show the new card
+        displayBook();
     });
+
+    if (cancelButton) {
+        cancelButton.addEventListener('click', hideModal);
+    }
 }
 
-// Event delegation for card interactions (toggle read / remove)
 if (library) {
     library.addEventListener("click", (event) => {
-        const bookEl = event.target.closest(".book");
+        // [x] REFACTOR: Use semantic data attributes for book card action buttons instead of relying on classes.        // NOTE: this preserves the Remove/Toggle interaction after refactoring button styles.        const clickedButton = event.target instanceof Element ? event.target.closest("[data-book-action]") : null;
+        if (!clickedButton) return;
+
+        const bookEl = clickedButton.closest(".book");
         if (!bookEl) return;
 
         const bookId = bookEl.dataset.bookId;
         const libraryBook = bookId ? myLibrary.find((book) => book.bookId === bookId) : undefined;
+        const action = clickedButton.dataset.bookAction;
 
-        const isToggleButton = event.target.classList.contains("book__toggle-read") || event.target.classList.contains("book__btn--read");
-        const isRemoveButton = event.target.classList.contains("book__remove") || event.target.classList.contains("book__btn--remove");
-
-        if (isToggleButton) {
-            const readStatusElement = bookEl.querySelector(".book__read");
-            if (libraryBook) {
-                libraryBook.toggleRead();
-                if (readStatusElement) {
-                    readStatusElement.textContent = libraryBook.isRead ? "Read" : "Not read yet";
-                }
-            } else if (readStatusElement) {
-                const currentlyRead = readStatusElement.textContent.toLowerCase().includes("read");
-                readStatusElement.textContent = currentlyRead ? "Status: Not read yet" : "Status: Read";
-            }
+        if (action === "toggle" && libraryBook) {
+            libraryBook.toggleRead();
+            bookEl.querySelector(".book__read").textContent = libraryBook.isRead ? "Read" : "Not read yet";
         }
 
-        if (isRemoveButton) {
-            if (libraryBook) {
-                myLibrary.splice(index, 1);
+        if (action === "remove" && libraryBook) {
+            const removeIndex = myLibrary.findIndex((book) => book.bookId === libraryBook.bookId);
+            if (removeIndex !== -1) {
+                myLibrary.splice(removeIndex, 1);
                 displayBook();
-            } else {
-                bookEl.remove();
             }
         }
     });
 }
+
+initialBooks.forEach((book) => myLibrary.push(book));
+
+displayBook();
