@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+    <script src="javascript.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <main class="main">
+        <section class="library__header">
+            <div class="library__heading">
+                <div>
+                    <h1 class="library__title">My Library</h1>
+                    <p class="library__intro">Explore your books in a responsive gallery and add new titles with the button below.</p>
+                </div>
+                <button class="library__add-button" id="addBookButton" type="button">Add Book</button>
+            </div>
+            <p class="library__subtext">Use the gallery to toggle read status, remove books, or add new ones from the form.</p>
+        </section>
+
+        <section class="library" id="library" aria-live="polite">
+            <!-- Book cards render here -->
+        </section>
+    </main>
+
+    <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal__content">
+            <button class="modal__close" id="modalClose" type="button" aria-label="Close form">×</button>
+            <h2 id="modalTitle">Add a new book</h2>
+            <form id="form" class="book-form">
+                <div class="book-form__group">
+                    <label class="book-form__label" for="title">Title</label>
+                    <input class="book-form__input" id="title" name="title" type="text" required />
+                </div>
+                <div class="book-form__group">
+                    <label class="book-form__label" for="author">Author</label>
+                    <input class="book-form__input" id="author" name="author" type="text" required />
+                </div>
+                <div class="book-form__group">
+                    <label class="book-form__label" for="pages">Pages</label>
+                    <input class="book-form__input" id="pages" name="pages" type="number" min="1" required />
+                </div>
+                <div class="book-form__group book-form__group--checkbox">
+                    <label class="book-form__label book-form__label--checkbox">
+                        <input class="book-form__input" id="read" name="read" type="checkbox" />
+                        Mark as read
+                    </label>
+                </div>
+                <div class="book-form__group book-form__group--actions">
+                    <button type="submit" class="book-form__button book-form__button--primary">Save book</button>
+                    <button type="button" class="book-form__button book-form__button--secondary" id="modalCancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
