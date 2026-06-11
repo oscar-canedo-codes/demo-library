@@ -147,7 +147,8 @@ if (addBookButton && addBookModal && addBookForm && closeButton) {
 
 if (library) {
     library.addEventListener("click", (event) => {
-        // [x] REFACTOR: Use semantic data attributes for book card action buttons instead of relying on classes.        // NOTE: this preserves the Remove/Toggle interaction after refactoring button styles.        const clickedButton = event.target instanceof Element ? event.target.closest("[data-book-action]") : null;
+        // [x] REFACTOR: Use semantic data attributes for book card action buttons instead of relying on classes.
+        const clickedButton = event.target instanceof Element ? event.target.closest("[data-book-action]") : null;
         if (!clickedButton) return;
 
         const bookEl = clickedButton.closest(".book");
